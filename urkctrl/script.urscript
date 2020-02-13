@@ -1,0 +1,23 @@
+
+def prog():
+    thread motionThread():
+        target_qd = [0.0,0.0,0.0,0.0,0.0,0.0]
+        while(1):
+            i=0
+            while(i<6):
+                target_qd[i] = read_input_float_register(i)
+                i = i + 1
+            end
+            acc = read_input_float_register(6)
+            speedj(target_qd, acc, 0.008)
+        end
+    end
+    proxy = rpc_factory( "xmlrpc" , "http://10.10.238.1:5001" )
+    p = get_actual_tcp_pose()
+    p1 = pose_trans(p, p[0, 0, -0.05, 0, 0, 0])
+
+    t = run motionThread()
+    proxy.movelp(p, p1, p)
+    kill t
+    sync()
+end

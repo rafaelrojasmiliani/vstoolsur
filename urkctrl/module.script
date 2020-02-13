@@ -1,0 +1,49 @@
+
+thread motionThread():
+    target_qd = [0.0,0.0,0.0,0.0,0.0,0.0]
+    write_output_integer_register(0, 1)
+    while(read_input_integer_register(0)==0):
+        sync()
+    end
+    sync()
+    while(read_input_integer_register(0)!=0):
+        i=0
+        while(i<6):
+            target_qd[i] = read_input_float_register(i)
+            i = i + 1
+        end
+        acc = read_input_float_register(6)
+        speedj(target_qd, acc, 0.008)
+    end
+end
+
+def movelreg(p1):
+    p0 = get_actual_tcp_pose()
+    pmid = p0
+    i = 0
+    while(i<3):
+        pmid[i] = 0.5*(p0[i]+p1[i])
+        i = i + 1
+    end
+    
+    proxy = rpc_factory( "xmlrpc" , "http://10.10.238.1:5001" )
+    write_output_integer_register(0, 0)
+    t = run motionThread()
+    proxy.movelp(p0, pmid, p1)
+    kill t
+    sync()
+    write_output_integer_register(0, 0)
+end
+
+def movelreg2(p1, p2):
+    p0 = get_actual_tcp_pose()
+    
+    proxy = rpc_factory( "xmlrpc" , "http://10.10.238.1:5001" )
+    write_output_integer_register(0, 0)
+    t = run motionThread()
+    proxy.movelp(p0, p1, p2)
+    kill t
+    sync()
+    movel(p2)
+    write_output_integer_register(0, 0)
+end
