@@ -6,14 +6,17 @@ import numpy as np
 import itertools
 from urmsgs import cUrCartesianInfo, cUrKinematicsInfo
 from vsdk import cVsdk
+import os
 
 
 class cUrdk(cVsdk):
     def __init__(self, **args):
         super().__init__()
-        if '_ip' in args.keys():
-            c = cUrCartesianInfo()
-            c.get('10.10.238.37', 30001)
+        if '_ururi' in args.keys():
+            ururi = args['_ururi'] 
+            res = os.system("ping -c 1 " + ururi)
+            if res != 0:
+                raise ValueError('The robot is not online')
         else:
             assert '_model' in args
 
