@@ -113,8 +113,13 @@ class cUrJointData(object):
         self.t_motor_ = None
         self.t_micro_ = None
         self.joint_mode_ = None
-        fmtsz = 6 * (('>d', 6), )
-        fmtsz += (('>6b', 6 * 1), )
+        fmtsz = 6*(
+                   3 * (('>d', 8), ) +
+                   (('>f', 4), ) +
+                   (('>f', 4), ) +
+                   (('>f', 4), ) +
+                   (('>f', 4), ) +
+                   (('>B', 1), ) )
         content_size = 0
         for (_, size) in fmtsz:
             content_size += size
