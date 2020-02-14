@@ -4,7 +4,7 @@ import numpy as np
 import sympy as sp
 import quadpy
 import unittest
-from urmsgs.urmsgs import cUrCartesianInfo, cUrJointData 
+from urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
 from urmsgs.urmsgs import cUrKinematicsInfo
 
 from vsdk.vsdk import cVsdk
@@ -48,7 +48,7 @@ class cMyTest(unittest.TestCase):
         ''' Get messages from UR
         '''
         jointState = cUrJointData()
-        
+
         ip = '10.10.238.32'
         port = 30001
         print('---- Get Joint state packages ----')
@@ -71,8 +71,8 @@ class cMyTest(unittest.TestCase):
         for a, s in zip(aa, ss):
             print('''
         DH {} parameter array = {}
-        '''.format(s, np.array2string(a))
-    
+        '''.format(s, np.array2string(a)))
+
         print('---- Get Cartesian info packages ----')
 
         cinf = cUrCartesianInfo()
@@ -80,7 +80,11 @@ class cMyTest(unittest.TestCase):
         print('''
         Current TCP pose    = {}
         Current TCP offset  = {}
-        '''.format(*[np.array2string(v) for v in [cinf.tcpPose_, cinf.tcp_pose_, cinf.tcp_offset_]]))
+        '''.format(*[
+            np.array2string(v)
+            for v in [cinf.tcp_pose_, cinf.tcp_offset_]
+        ]))
+
 
 def main():
     unittest.main()
@@ -88,4 +92,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
