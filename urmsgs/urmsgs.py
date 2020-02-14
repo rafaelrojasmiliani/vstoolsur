@@ -85,17 +85,17 @@ def getRobotStatePacketArray(_msg):
 
 class cUrCartesianInfo(object):
     def __init__(self, _data=None):
-        self.tcpPose = None
-        self.tcpOffset = None
+        self.tcp_pose_ = None
+        self.tcp_offset_ = None
 
         if _data is not None:
             self.unpack(_data)
 
     def unpack(self, _data):
-        tcpPose = struct.unpack('>6d', _data[5:5 + 8 * 6])
-        tcpOffset = struct.unpack('>6d', _data[5 + 8 * 6:5 + 8 * 6 + 8 * 6])
-        self.tcpPose = np.array(tcpPose)
-        self.tcpOffset = np.array(tcpOffset)
+        tcp_pose_ = struct.unpack('>6d', _data[5:5 + 8 * 6])
+        tcp_offset_ = struct.unpack('>6d', _data[5 + 8 * 6:5 + 8 * 6 + 8 * 6])
+        self.tcp_pose_ = np.array(tcp_pose_)
+        self.tcp_offset_ = np.array(tcp_offset_)
 
     def get(self, _ip, _port):
         pac = get_rs_packet(CARTESIAN_INFO, _ip, _port)
@@ -132,7 +132,6 @@ class cUrJointData(object):
         for i, (fmt, sz) in enumerate(self.fmtsz_):
             d.append(struct.unpack(fmt, _data[rd:rd + sz])[0])
             rd += sz
-        print(d)
 
         self.q_actual_ = np.array(d[0::8])
         self.q_target_ = np.array(d[1::8])
@@ -189,10 +188,10 @@ class cUrConfigurationData(object):
 
         self.eqRadius_ = 0.0
 
-        self.DHa_ = np.zeros((6, ))
-        self.DHd_ = np.zeros((6, ))
-        self.DHalpha_ = np.zeros((6, ))
-        self.DHtheta_ = np.zeros((6, ))
+        self.dh_a_ = np.zeros((6, ))
+        self.dh_d_ = np.zeros((6, ))
+        self.dh_alpha_ = np.zeros((6, ))
+        self.dh_theta_ = np.zeros((6, ))
 
         self.masterboardVersion = 0
 
@@ -226,13 +225,13 @@ class cUrConfigurationData(object):
         self.eqRadius_ = struct.unpack('>d', _data[rd:rd + 8])[0]
         rd += 8
 
-        self.DHa_[:] = struct.unpack('>6d', _data[rd:rd + 48])
+        self.dh_a_[:] = struct.unpack('>6d', _data[rd:rd + 48])
         rd += 48
-        self.DHd_[:] = struct.unpack('>6d', _data[rd:rd + 48])
+        self.dh_d_[:] = struct.unpack('>6d', _data[rd:rd + 48])
         rd += 48
-        self.DHalpha_[:] = struct.unpack('>6d', _data[rd:rd + 48])
+        self.dh_alpha_[:] = struct.unpack('>6d', _data[rd:rd + 48])
         rd += 48
-        self.DHtheta_[:] = struct.unpack('>6d', _data[rd:rd + 48])
+        self.dh_theta_[:] = struct.unpack('>6d', _data[rd:rd + 48])
         rd += 48
 
         self.masterboardVersion = struct.unpack('>i', _data[rd:rd + 4])[0]
@@ -257,10 +256,11 @@ class cUrKinematicsInfo(object):
 
         self.checksum_ = np.zeros((6, ), dtype=np.uint32)
 
-        self.DHa_ = np.zeros((6, ))
-        self.DHd_ = np.zeros((6, ))
-        self.DHalpha_ = np.zeros((6, ))
-        self.DHtheta_ = np.zeros((6, ))
+        self.dh_a_ = np.zeros((6, ))
+        self.dh_d_ = np.zeros((6, ))
+        self.dh_alpha_ = np.zeros((6, ))
+        self.dh_theta_ = np.zeros((6, ))
+
 
         self.calibration_status_ = 0
 
@@ -270,13 +270,13 @@ class cUrKinematicsInfo(object):
         self.checksum_[:] = struct.unpack('>6I', _data[rd:rd + 24])
         rd += 24
 
-        self.DHtheta_[:] = struct.unpack('>6d', _data[rd:rd + 48])
+        self.dh_theta_[:] = struct.unpack('>6d', _data[rd:rd + 48])
         rd += 48
-        self.DHa_[:] = struct.unpack('>6d', _data[rd:rd + 48])
+        self.dh_a_[:] = struct.unpack('>6d', _data[rd:rd + 48])
         rd += 48
-        self.DHd_[:] = struct.unpack('>6d', _data[rd:rd + 48])
+        self.dh_d_[:] = struct.unpack('>6d', _data[rd:rd + 48])
         rd += 48
-        self.DHalpha_[:] = struct.unpack('>6d', _data[rd:rd + 48])
+        self.dh_alpha_[:] = struct.unpack('>6d', _data[rd:rd + 48])
         rd += 48
 
         self.calibration_status_ = struct.unpack('>I', _data[rd:rd + 4])[0]
@@ -294,10 +294,10 @@ def test():
 
     while (1):
         confinfo.get('10.10.238.32', 30001)
-        print(repr(confinfo.DHa_))
-        print(repr(confinfo.DHd_))
-        print(repr(confinfo.DHalpha_))
-        print(repr(confinfo.DHtheta_))
+        print(repr(confinfo.dh_a_))
+        print(repr(confinfo.dh_d_))
+        print(repr(confinfo.dh_alpha_))
+        print(repr(confinfo.dh_theta_))
         print('-------------------------')
         time.sleep(0.05)
 

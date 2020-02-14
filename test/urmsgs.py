@@ -4,7 +4,8 @@ import numpy as np
 import sympy as sp
 import quadpy
 import unittest
-from urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
+from urmsgs.urmsgs import cUrCartesianInfo, cUrJointData 
+from urmsgs.urmsgs import cUrKinematicsInfo
 
 from vsdk.vsdk import cVsdk
 
@@ -50,19 +51,36 @@ class cMyTest(unittest.TestCase):
         
         ip = '10.10.238.32'
         port = 30001
+        print('---- Get Joint state packages ----')
         jointState.get(ip, port)
+
         q = jointState.q_actual_
         qd = jointState.qd_actual_
 
-        print(q)
-        print(qd)
+        print('''
+        Current joint position = {}
+        Current joint velocity = {}
+        '''.format(*[np.array2string(v) for v in [q, qd]]))
 
+        print('---- Get Kinematic info packages ----')
+        kinf = cUrKinematicsInfo()
+        kinf.get(ip, port)
+        aa = [kinf.dh_a_, kinf.dh_d_, kinf.dh_alpha_, kinf.dh_theta_]
+        ss = ['a', 'd', 'alfa', 'theta']
 
-
-
-
-
+        for a, s in zip(aa, ss):
+            print('''
+        DH {} parameter array = {}
+        '''.format(s, np.array2string(a))
     
+        print('---- Get Cartesian info packages ----')
+
+        cinf = cUrCartesianInfo()
+        cinf.get(ip, port)
+        print('''
+        Current TCP pose    = {}
+        Current TCP offset  = {}
+        '''.format(*[np.array2string(v) for v in [cinf.tcpPose_, cinf.tcp_pose_, cinf.tcp_offset_]]))
 
 def main():
     unittest.main()
