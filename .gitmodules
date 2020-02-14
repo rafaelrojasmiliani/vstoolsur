@@ -1,0 +1,3 @@
+[submodule "vsdk"]
+	path = vsdk
+	url = git@github.com:rafaelrojasmiliani/vsdk.git
