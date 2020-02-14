@@ -113,13 +113,8 @@ class cUrJointData(object):
         self.t_motor_ = None
         self.t_micro_ = None
         self.joint_mode_ = None
-        fmtsz = 6*(
-                   3 * (('>d', 8), ) +
-                   (('>f', 4), ) +
-                   (('>f', 4), ) +
-                   (('>f', 4), ) +
-                   (('>f', 4), ) +
-                   (('>B', 1), ) )
+        fmtsz = 6 * (3 * (('>d', 8), ) + (('>f', 4), ) + (('>f', 4), ) +
+                     (('>f', 4), ) + (('>f', 4), ) + (('>B', 1), ))
         content_size = 0
         for (_, size) in fmtsz:
             content_size += size
@@ -134,22 +129,23 @@ class cUrJointData(object):
     def unpack(self, _data):
         rd = 5  # jump the size and the package type
         d = []
-        for (fmt, sz) in self.fmtsz_:
-            d.append(struct.unpack(fmt, _data[rd:rd + sz]))
+        for i, (fmt, sz) in enumerate(self.fmtsz_):
+            d.append(struct.unpack(fmt, _data[rd:rd + sz])[0])
             rd += sz
+        print(d)
 
-        self.q_actual_ = np.array(d[0])
-        self.q_target_ = np.array(d[1])
-        self.qd_actual_ = np.array(d[2])
-        self.i_actual_ = np.array(d[3])
-        self.v_actual_ = np.array(d[4])
-        self.t_motor_ = np.array(d[5])
-        self.t_micro_ = np.array(d[6])
-        self.joint_mode_ = np.array(d[7])
+        self.q_actual_ = np.array(d[0::8])
+        self.q_target_ = np.array(d[1::8])
+        self.qd_actual_ = np.array(d[2::8])
+        self.i_actual_ = np.array(d[3::8])
+        self.v_actual_ = np.array(d[4::8])
+        self.t_motor_ = np.array(d[5::8])
+        self.t_micro_ = np.array(d[6::8])
+        self.joint_mode_ = np.array(d[7::8])
 
     def get(self, _ip, _port):
         pac = get_rs_packet(JOINT_DATA, _ip, _port)
-        assert pac.len_ - 4 == self.content_size_, '''
+        assert pac.len_ - 5 == self.content_size_, '''
         Error: the paket downloaded from the robot does not have the correct size0'''
         self.unpack(pac.data_)
 
