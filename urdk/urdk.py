@@ -32,4 +32,3 @@ class cUrdk(cVsdk):
             assert '_model' in args, ''' 
             Error: you must speficy which model are you using
             '''
-
