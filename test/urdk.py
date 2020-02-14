@@ -6,7 +6,7 @@ import quadpy
 import unittest
 from urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
 
-from vsdk.vsdk import cVsdk
+from urdk.urdk import cUrdk
 
 
 def ping(_hostname):
@@ -16,28 +16,40 @@ def ping(_hostname):
 
 class cMyTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
-        super(cMyTest, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def test_dk_wrt_robot(self):
         ''' Compare the output of dk with the robot's output
         '''
-        jointState = cUrJointData()
-        
         ip = '10.10.238.32'
         port = 30001
-        for i in range(1000):
-            jointState.get(ip, port)
+        js = cUrJointData()
+        ci = cUrCartesianInfo()
 
-            q = jointState.q_actual_
+        urmodel = cUrdk(_ip=ip)
 
-            qd = jointState.qd_actual_
+        for i in range(1):
+            js.get(ip, port)
+            ci.get(ip, port)
 
+            q = js.q_actual_
 
+            m0e = urmodel(q)
+            x_nominal = m0e[:3, -1]
 
+            x_test = ci.tcp_pose_[:3]
 
+            e = np.abs(x_nominal - x_test)
 
+            einf = np.max(e)
 
-    
+            print('''
+                     x nominal      = {}
+                     x test         = {}
+                     error inf norm = {}
+                  '''.format(
+                *[np.array2string(v) for v in [x_nominal, x_test, einf]]))
+
 
 def main():
     unittest.main()
