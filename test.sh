@@ -1,6 +1,7 @@
 # Test time format
 #modulename=$lasttesttime,$
-export PYTHONPATH=$PYTHONPATH:/home/rafaelrojas/paper/trjplannerserver/src/gspline/
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+export PYTHONPATH=$PYTHONPATH:$DIR/vsdk/
 if [ "$1" = "all" ]; then
     python3 -m unittest discover
 else

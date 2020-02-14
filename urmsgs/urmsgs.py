@@ -22,7 +22,7 @@ class cUrMessage(object):
         This class represent a binary message.
         self.data_ (binary) binary data associated with the message
         self.len_  (int) length of the message in bytes
-        self.type_ (int) type of the message 
+        self.type_ (int) type of the message
     '''
 
     def __init__(self, _soc=None):
@@ -44,7 +44,7 @@ class cUrMessage(object):
         """
         self.data_ = copy.copy(_soc.recv(4))
         self.len_ = struct.unpack('>i', self.data_)[0]
-        self.data_ += _soc.recv(self.len_ - 4)
+        self.data_ += copy.copy(_soc.recv(self.len_ - 4))
         self.type_ = struct.unpack('>b', self.data_[4:5])[0]
 
         return self
@@ -54,6 +54,7 @@ class cUrRobotStatePacket(object):
     """cUrRobotStatePacket
         Represents a UR robot state packate
     """
+
     def __init__(self, _data=None):
         self.len_ = None
         self.data_ = None
@@ -112,17 +113,25 @@ class cUrJointData(object):
         self.t_motor_ = None
         self.t_micro_ = None
         self.joint_mode_ = None
+        fmtsz = 6 * (('>d', 6), )
+        fmtsz += (('>6b', 6 * 1), )
+        content_size = 0
+        for (_, size) in fmtsz:
+            content_size += size
+
+        self.content_size_ = content_size
+
+        self.fmtsz_ = fmtsz  # format and sizes
 
         if _data is not None:
             self.unpack(_data)
 
     def unpack(self, _data):
-        rd = 5
+        rd = 5  # jump the size and the package type
         d = []
-        for i in range(0, 7):
-            d.append(struct.unpack('>6d', _data[rd:rd + 8 * 6]))
-            rd += 8 * 6
-        d.append(struct.unpack('>6b', _data[rd:rd + 6]))
+        for (fmt, sz) in self.fmtsz_:
+            d.append(struct.unpack(fmt, _data[rd:rd + sz]))
+            rd += sz
 
         self.q_actual_ = np.array(d[0])
         self.q_target_ = np.array(d[1])
@@ -135,16 +144,18 @@ class cUrJointData(object):
 
     def get(self, _ip, _port):
         pac = get_rs_packet(JOINT_DATA, _ip, _port)
+        assert pac.len_ - 4 == self.content_size_, '''
+        Error: the paket downloaded from the robot does not have the correct size0'''
         self.unpack(pac.data_)
 
 
 def get_rs_packet(_type, _ip, _port):
     '''
        get robot state packet:
-        
+
         Parameters:
         ----------
-            
+
     '''
     socket.setdefaulttimeout(None)
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

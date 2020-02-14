@@ -1,15 +1,15 @@
 '''
-Universal robot direct kinematics
+Universal robot direct kinematics symbolic model
 '''
 import numpy as np
 
 import itertools
 from urmsgs import cUrCartesianInfo, cUrKinematicsInfo
-from vsdk.vsdk import cVsdk
+from vsdk.vsdksym import cVsdkSym
 import os
 
 
-class cUrdk(cVsdk):
+class cUrdkSym(cVsdkSym):
     def __init__(self, **args):
         super().__init__()
         if '_ururi' in args.keys():
@@ -18,11 +18,14 @@ class cUrdk(cVsdk):
             if res != 0:
                 raise ValueError('The robot is not online')
         else:
-            assert '_model' in args
+            assert '_model' in args, '''
+            Error: you must specify a robot model!
+            '''
+            assert '_tcpoffset' in args
 
-        self.m6ee = np.eye(4)
 
-        self.m6ee[:3, -1] = c.tcpOffset[:3]
+        self.setTCP(*c.tcpOffset[:3])
+
 
 
 
