@@ -1,3 +1,5 @@
+''' Very simple module to implement a kinematic control of the UR robot.
+'''
 import urmsgs.rtde.rtde as rtde
 import urmsgs.rtde.rtde_config as rtde_config
 import numpy as np
