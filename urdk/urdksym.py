@@ -13,6 +13,10 @@ from .kinematicdata import cUR3, cUR5, cUR10
 class cUrdkSym(cVsdkSym):
     def __init__(self, **args):
         super().__init__()
+        if '_q' in args:
+            self.q_ = args['_q']
+        else:
+            self.q_ = sp.symbols('q[0:6]', real=True)
         self.kinf_ = cUrKinematicsInfo()
         self.cinf_ = cUrCartesianInfo()
         if '_ip' in args.keys():
@@ -40,4 +44,16 @@ class cUrdkSym(cVsdkSym):
             dhd = self.kinf_.dh_d_[i]
             dhalpha = self.kinf_.dh_alpha_[i]
             dhtheta = self.kinf_.dh_theta_[i]
-            self.add_link(dha, dhd, dhalpha, dhtheta)
+            self.add_link(dha, dhd, dhalpha, dhtheta, self.q_[i])
+
+
+def ur_sym_jac(**args):
+    dkg = cUrdkSym(args)
+    res = dk.jac()
+    return res
+
+
+def ur_sym_dk(**args):
+    dkg = cUrdkSym(args)
+    res = dk()
+    return res
