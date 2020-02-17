@@ -7,6 +7,7 @@ import unittest
 from urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
 
 from urdk.urdksym import cUrdkSym
+from urdk.urdksym import ur_sym_dk, ur_sym_jac 
 
 
 class cMyTest(unittest.TestCase):
@@ -66,6 +67,26 @@ class cMyTest(unittest.TestCase):
         dkur3()
         dkur5()
         dkur10()
+
+    def test_variables(self):
+        x = sp.symbols('x_0:6', real=True)
+
+        dk = ur_sym_dk(_q=x, _model='ur3')
+        jac = ur_sym_jac(_q=x, _model='ur3')
+
+        for i in range(3):
+            for j in range(6):
+                jac_test = dk.diff(x[j])[i, 3]
+                jac_nom = jac[i, j]
+
+                res = sp.simplify(jac_nom - jac_test)
+                res = sp.lambdify(sp.Matrix(x), res, 'numpy')
+                for k in range(20):
+                    xnum = np.random.rand(6)
+                    assert abs(res(*xnum)) < 1.0e-8
+
+        
+
 
 
 def main():

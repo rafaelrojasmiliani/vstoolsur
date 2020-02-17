@@ -16,9 +16,9 @@ class cUrdkSym(cVsdkSym):
     def __init__(self, **args):
         super().__init__()
         if '_q' in args:
-            self.q_ = args['_q']
+            q = args['_q']
         else:
-            self.q_ = sp.symbols('q[0:6]', real=True)
+            q = sp.symbols('q[0:6]', real=True)
         self.kinf_ = cUrKinematicsInfo()
         self.cinf_ = cUrCartesianInfo()
         if '_ip' in args.keys():
@@ -31,7 +31,10 @@ class cUrdkSym(cVsdkSym):
             self.tcp_offset_ = self.cinf_.tcp_offset_
         else:
             model = args['_model']
-            self.tcp_offset_ = args['_tcp_offset']
+            if '_tcp_offset' in args:
+                self.tcp_offset_ = args['_tcp_offset']
+            else:
+                self.tcp_offset_ = np.zeros((3, ))
             if model == 'ur3':
                 self.kinf_ = cUR3
             elif model == 'ur5':
@@ -46,16 +49,16 @@ class cUrdkSym(cVsdkSym):
             dhd = self.kinf_.dh_d_[i]
             dhalpha = self.kinf_.dh_alpha_[i]
             dhtheta = self.kinf_.dh_theta_[i]
-            self.add_link(dha, dhd, dhalpha, dhtheta, self.q_[i])
+            self.add_link(dha, dhd, dhalpha, dhtheta, q[i])
 
 
 def ur_sym_jac(**args):
-    dkg = cUrdkSym(args)
+    dk = cUrdkSym(**args)
     res = dk.jac()
     return res
 
 
 def ur_sym_dk(**args):
-    dkg = cUrdkSym(args)
+    dk = cUrdkSym(**args)
     res = dk()
     return res
