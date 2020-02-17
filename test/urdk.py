@@ -23,6 +23,10 @@ class cMyTest(unittest.TestCase):
         '''
         ip = '10.10.238.32'
         port = 30001
+        res = os.system("ping -c 1 " + ip)
+        if res != 0:
+            print('Cannot compare with the robot')
+            return
         js = cUrJointData()
         ci = cUrCartesianInfo()
 

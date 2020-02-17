@@ -18,6 +18,10 @@ class cMyTest(unittest.TestCase):
         '''
         ip = '10.10.238.32'
         port = 30001
+        res = os.system("ping -c 1 " + ip)
+        if res != 0:
+            print('Cannot compare with the robot')
+            return
         js = cUrJointData()
         ci = cUrCartesianInfo()
 
@@ -51,6 +55,17 @@ class cMyTest(unittest.TestCase):
                      error inf norm = {}
                   '''.format(
                 *[np.array2string(v) for v in [x_nominal, x_test, einf]]))
+
+    def test_constructor(self):
+        ''' Test if the constructor works '''
+
+        dkur3 = cUrdkSym(_model='ur3')
+        dkur5 = cUrdkSym(_model='ur5')
+        dkur10 = cUrdkSym(_model='ur10')
+
+        dkur3()
+        dkur5()
+        dkur10()
 
 
 def main():

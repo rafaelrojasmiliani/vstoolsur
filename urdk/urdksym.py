@@ -3,6 +3,8 @@ Universal robot direct kinematics symbolic model
 '''
 import numpy as np
 
+import sympy as sp
+
 import itertools
 from urmsgs.urmsgs import cUrCartesianInfo, cUrKinematicsInfo
 from vsdk.vsdksym import cVsdkSym

@@ -51,6 +51,9 @@ class cMyTest(unittest.TestCase):
 
         ip = '10.10.238.32'
         port = 30001
+        if not ping(ip):
+            print('Cannot find the robot')
+            return
         print('---- Get Joint state packages ----')
         jointState.get(ip, port)
 
