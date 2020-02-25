@@ -4,10 +4,10 @@ import numpy as np
 import sympy as sp
 import quadpy
 import unittest
-from urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
+from vsurt.urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
 
-from urdk.urdksym import cUrdkSym
-from urdk.urdksym import ur_sym_dk, ur_sym_jac 
+from vsurt.urdk.urdksym import cUrdkSym
+from vsurt.urdk.urdksym import ur_sym_dk, ur_sym_jac 
 
 
 class cMyTest(unittest.TestCase):

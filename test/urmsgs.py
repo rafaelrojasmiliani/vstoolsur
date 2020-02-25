@@ -4,8 +4,8 @@ import numpy as np
 import sympy as sp
 import quadpy
 import unittest
-from urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
-from urmsgs.urmsgs import cUrKinematicsInfo
+from vsurt.urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
+from vsurt.urmsgs.urmsgs import cUrKinematicsInfo
 
 from vsdk.vsdk import cVsdk
 

@@ -4,9 +4,9 @@ import numpy as np
 import sympy as sp
 import quadpy
 import unittest
-from urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
+from vsurt.urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
 
-from urdk.urdk import cUrdk
+from vsurt.urdk.urdk import cUrdk
 
 
 def ping(_hostname):
