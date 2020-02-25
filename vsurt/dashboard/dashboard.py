@@ -7,17 +7,18 @@ import select
 import telnetlib
 
 
-class cDashboad(object):
+class cDashboard(object):
     def __init__(self, _host, _port=29999):
         self.tn_ = telnetlib.Telnet(_host, _port)
-        self.tn_.read_eager()
+        self.tn_.read_until(b'\n')
 
     def command(self, _cmdstr):
         ''' send a comman to the dashboard.
             _cmdstr string'''
         cmd = _cmdstr.encode('utf-8') + b'\n'
         self.tn_.write(cmd)
-        return self.tn_.read_eager()
+        res = self.tn_.read_until(b'\n').decode('utf-8')[:-1]
+        return res
 
     def load(self, _filenamestr):
         cmd = 'load ' + _filenamestr
@@ -42,9 +43,7 @@ class cDashboad(object):
 
     def running(self):
         res = self.command('running')
-        if res[17] == 'F' or res[17] == 'f':
-            return False
-        return True
+        return res
 
     def robotmode(self):
         res = self.command('robotmode')
@@ -66,8 +65,8 @@ class cDashboad(object):
         self.tn_.close()
 
 
-class cDashboadState(object):
-    def __init__(self, _host, _port):
+class cDashboardState(object):
+    def __init__(self, _host, _port=29999):
         self.is_connected_ = 0
         self.runnig_ = 0
         self.robotMode_ = 0
@@ -81,20 +80,16 @@ class cDashboadState(object):
         self.port_ = _port
 
     def update(self):
-        dashboard = cDashboad(self.host_, self.port_)
+        dashboard = cDashboard(self.host_, self.port_)
         self.runnig_ = dashboard.running()
 
-        self.robotMode_ = dashboard.command('robotmode\n')
-        self.robotMode_ = self.robotMode_.split(':', 1)[-1]
+        self.robotMode_ = dashboard.command('robotmode')
 
-        self.programLoaded_ = dashboard.command('get loaded program\n')
-        self.programLoaded_ = self.programLoaded_.split(':', 1)[-1]
+        self.programLoaded_ = dashboard.command('get loaded program')
 
-        self.programState_ = dashboard.command('programState\n')
-        self.programState_ = self.programState_.split(':', 1)[-1]
+        self.programState_ = dashboard.command('programState')
 
-        self.polyscopeVersion_ = dashboard.command('PolyscopeVersion\n')
+        self.polyscopeVersion_ = dashboard.command('PolyscopeVersion')
 
-        self.safetyMode_ = dashboard.command('safetymode\n')
-        self.safetyMode_ = self.safetyMode_.split(':', 1)[-1]
+        self.safetyMode_ = dashboard.command('safetymode')
         dashboard.disconnect()

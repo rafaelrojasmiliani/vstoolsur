@@ -54,3 +54,5 @@ else
     printf "%s\n" "${modnametime[@]}" > $filename
 
 fi
+
+cd http/ && python3 dashboard.py

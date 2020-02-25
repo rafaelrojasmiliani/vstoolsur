@@ -1,25 +1,28 @@
 {% extends 'base.html' %}
 
 {% block body %}
-      <h2 class="text-muted">{{_dashboard.hostname}}</h2>
-      <p>Polyscope version {{_dashboard.polyscopeVersion}}</p>
+      <h2 class="text-muted">{{_dashboard.hostname_}}</h2>
     <table class="table">
     <tbody>
       <tr>
+        <th>Polyscope version</th>
+        <td>{{_dashboard.polyscopeVersion_}}</td>
+      </tr>
+      <tr>
         <th>Robot Mode</th>
-        <td>{{_dashboard.robotMode}}</td>
+        <td>{{_dashboard.robotMode_}}</td>
       </tr>
       <tr>
         <th>Program Loaded</th>
-        <td>{{_dashboard.programLoaded}}</td>
+        <td>{{_dashboard.programLoaded_}}</td>
       </tr>
       <tr>
         <th>Program Statate</th>
-        <td>{{_dashboard.programState}}</td>
+        <td>{{_dashboard.programState_}}</td>
       </tr>
       <tr>
         <th>Safety Mode</th>
-        <td>{{_dashboard.safetyMode}}</td>
+        <td>{{_dashboard.safetyMode_}}</td>
       </tr>
     </tbody>
     </table>
@@ -28,7 +31,7 @@
       <div class="col-lg-12">
         <h4>Program Control</h4>
         <p>
-          <form action="/dashboard" method="post">
+          <form action="/" method="post">
               <button type="submit"
                       class="btn btn-success"
                       name ="action"

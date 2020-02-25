@@ -1,4 +1,4 @@
-from dashboard import cDashBoardState, cDashBoardInterface
+from vsurt.dashboard import cDashboardState, cDashboard
 
 from flask import Flask, render_template, request
 
@@ -10,25 +10,20 @@ app = Flask(__name__)
 # Index route
 @app.route("/", methods=['POST', 'GET'])
 def index():
-    d = cDashBoardState()
-    return render_template('dashboard.html', _dashboard=d)
+    if request.method == 'POST':
+        action = request.form.get('action')
+        db = cDashboard('10.10.238.32')
+        if action == 'play':
+            db.play()
+        elif action == 'pause':
+            db.pause()
+        elif action == 'stop':
+            db.stop()
+        db.disconnect()
 
+    dbs = cDashboardState('10.10.238.32')
+    dbs.update()
+    res = render_template('dashboard.html', _dashboard=dbs)
+    return res
 
-@app.route("/rtde2ros/<int:_action>", methods=['POST'])
-def playstop(_action):
-    d = cDashBoardInterface()
-    d.connect()
-    if _action == 1:
-        d.play()
-    if _action == 0:
-        d.stop()
-    if _action == 2:
-        d.pause()
-    d.disconnect()
-    time.sleep(0.05)
-    d = cDashBoardState()
-    return render_template('dashboard.html', _dashboard=d)
-
-
-# Starts the app listening to port 5000 with debug mode
 app.run(host="0.0.0.0", debug=True)
