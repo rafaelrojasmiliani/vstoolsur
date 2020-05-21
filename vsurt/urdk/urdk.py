@@ -4,7 +4,7 @@ Universal robot direct kinematics
 import numpy as np
 
 import itertools
-from urmsgs.urmsgs import cUrCartesianInfo, cUrKinematicsInfo
+from ..urmsgs.urmsgs import cUrCartesianInfo, cUrKinematicsInfo
 from vsdk.vsdk import cVsdk
 from .kinematicdata import cUR3, cUR5, cUR10
 import os
