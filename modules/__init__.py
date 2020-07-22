@@ -1,9 +1,7 @@
 import sys
 import os
-import pathlib
 
-pwd = pathlib.Path(__file__).parent.absolute()
-modpath = pathlib.Path(pwd, 'vsdk')
+modpath = os.path.dirname(os.path.abspath(__file__))+'/vsdk'
 sys.path.append(str(modpath))
 import vsdk.vsdk
 import vsurt.urmsgs.urmsgs 
