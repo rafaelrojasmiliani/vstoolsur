@@ -6,7 +6,7 @@ import numpy as np
 import sympy as sp
 
 import itertools
-from urmsgs.urmsgs import cUrCartesianInfo, cUrKinematicsInfo
+from ..urmsgs.urmsgs import cUrCartesianInfo, cUrKinematicsInfo
 from vsdk.vsdksym import cVsdkSym
 import os
 from .kinematicdata import cUR3, cUR5, cUR10
@@ -14,7 +14,7 @@ from .kinematicdata import cUR3, cUR5, cUR10
 
 class cUrdkSym(cVsdkSym):
     def __init__(self, **args):
-        super().__init__()
+        cVsdkSym.__init__(self)
         if '_q' in args:
             q = args['_q']
         else:

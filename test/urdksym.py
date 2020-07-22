@@ -2,7 +2,6 @@
 import os
 import numpy as np
 import sympy as sp
-import quadpy
 import unittest
 from vsurt.urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
 
@@ -12,7 +11,7 @@ from vsurt.urdk.urdksym import ur_sym_dk, ur_sym_jac
 
 class cMyTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        unittest.TestCase.__init__(self, *args, **kwargs)
 
     def test_dk_wrt_robot(self):
         ''' Compare the output of dk with the robot's output
