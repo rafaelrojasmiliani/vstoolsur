@@ -2,6 +2,7 @@
 #modulename=$lasttesttime,$
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export PYTHONPATH=$PYTHONPATH:$DIR/vsdk/
+export PYTHONPATH=$PYTHONPATH:$DIR
 if [ "$1" = "all" ]; then
     python3 -m unittest discover
 else

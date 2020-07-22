@@ -11,12 +11,12 @@ import os
 
 
 class cUrdk(cVsdk):
-    def __init__(self, **args):
-        super().__init__()
+    def __init__(self, **kwargs):
+        cVsdk.__init__(self)
         self.kinf_ = cUrKinematicsInfo()
         self.cinf_ = cUrCartesianInfo()
-        if '_ip' in args.keys():
-            ip_robot = args['_ip']
+        if '_ip' in kwargs.keys():
+            ip_robot = kwargs['_ip']
             res = os.system("ping -c 1 " + ip_robot)
             if res != 0:
                 raise ValueError('The robot is not online')
@@ -24,8 +24,8 @@ class cUrdk(cVsdk):
             self.cinf_.get(ip_robot, 30001)
             self.tcp_offset_ = self.cinf_.tcp_offset_
         else:
-            model = args['_model']
-            self.tcp_offset_ = args['_tcp_offset']
+            model = kwargs['_model']
+            self.tcp_offset_ = kwargs['_tcp_offset']
             if model == 'ur3':
                 self.kinf_ = cUR3
             elif model == 'ur5':

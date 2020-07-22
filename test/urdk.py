@@ -1,8 +1,6 @@
 ''' Test the direct kinematics of the Universal robots.'''
 import os
 import numpy as np
-import sympy as sp
-import quadpy
 import unittest
 from vsurt.urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
 
@@ -16,7 +14,7 @@ def ping(_hostname):
 
 class cMyTest(unittest.TestCase):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        unittest.TestCase.__init__(self, *args, **kwargs)
 
     def test_dk_wrt_robot(self):
         ''' Compare the output of dk with the robot's output
