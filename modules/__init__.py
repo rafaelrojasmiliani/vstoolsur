@@ -3,9 +3,7 @@ import os
 
 modpath = os.path.dirname(os.path.abspath(__file__))+'/vsdk'
 sys.path.append(str(modpath))
-import vsdk.vsdk
-import vsurt.urmsgs.urmsgs 
-import vsurt.urdk.urdksym
+import vsdk
 #
 #modpath = pathlib.Path(pwd, 'modules', 'trjserver', 'src')
 #sys.path.append(str(modpath))
