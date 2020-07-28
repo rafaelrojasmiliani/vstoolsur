@@ -5,6 +5,7 @@ import unittest
 from vsurt.urmsgs.urmsgs import cUrCartesianInfo, cUrJointData
 
 from vsurt.urdk.urdk import cUrdk
+import time
 
 
 def ping(_hostname):
@@ -52,6 +53,34 @@ class cMyTest(unittest.TestCase):
                   '''.format(
                 *[np.array2string(v) for v in [x_nominal, x_test, einf]]))
 
+    def test_jacobian_computation_time(self):
+        ''' Compare compute the time the robot's take to compute and invert the jacobian
+        '''
+        ip = '127.0.0.1'
+
+        urmodel = cUrdk(_ip=ip)
+
+        N = 500
+        dt_jac = 0.0
+        dt_jac_inv = 0.0
+        dt_jac_svd = 0.0
+        q = np.random.rand(6)
+        for _ in range(N):
+            t0 = time.time()
+            jac = urmodel.jac(q)
+            t1 = time.time()
+            jac_inv = np.linalg.inv(jac)
+            t2 = time.time()
+            res = np.linalg.svd(jac)
+            t3 = time.time()
+
+            dt_jac = t1 - t0
+            dt_jac_inv = t2 - t1
+            dt_jac_svd = t3 - t2
+
+        print('jacobian time computation', dt_jac/N)
+        print('jacobian inversion time  ', dt_jac_inv/N)
+        print('jacobian svd time        ', dt_jac_svd/N)
 
 def main():
     unittest.main()

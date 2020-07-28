@@ -1,8 +1,7 @@
 try:
-    from setuptools import setup
+    from setuptools import setup, find_namespace_packages
 except ImportError:
     from distutils.core import setup
-
 
 setup(
     name='vsurt',
@@ -12,6 +11,9 @@ setup(
         'numpy >= 1.6.2',
     ],
     packages=[
+        'vsurt.dashboard',
+        'vsurt.urdk',
+        'vsurt.urmsgs',
         'vsurt'
     ],
 )

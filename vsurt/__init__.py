@@ -1,4 +1,3 @@
-import .dashboard  
-import .urdk  
-import .urkctrl  
-import .urmsgs
+from .dashboard   import *
+from .urdk   import *
+from .urmsgs import *
