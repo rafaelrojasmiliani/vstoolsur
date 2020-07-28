@@ -286,21 +286,3 @@ class cUrKinematicsInfo(object):
         pac = get_rs_packet(KINEMATICS_INFO, _ip, _port)
         self.unpack(pac.data_)
 
-
-def test():
-    import time
-
-    confinfo = cUrKinematicsInfo()
-
-    while (1):
-        confinfo.get('10.10.238.32', 30001)
-        print(repr(confinfo.dh_a_))
-        print(repr(confinfo.dh_d_))
-        print(repr(confinfo.dh_alpha_))
-        print(repr(confinfo.dh_theta_))
-        print('-------------------------')
-        time.sleep(0.05)
-
-
-if __name__ == '__main__':
-    test()
